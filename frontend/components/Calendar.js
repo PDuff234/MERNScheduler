@@ -37,9 +37,41 @@ function CalendarComponent() {
         setFormData(prevData => ({ ...prevData, [name]: value }));
     };
 
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault();
 
+        // Prepare the data to be sent
+        const scheduleData = {
+            fullName: formData.fullName,
+            email: formData.email,
+            major: formData.major,
+            date: selectedDate // Ensure this is in the correct format
+        };
+    
+        try {
+            // Send a POST request to your server endpoint
+            const response = await fetch('http://localhost:5000/api/schedules', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(scheduleData)
+            });
+    
+            if (!response.ok) {
+                throw new Error(`Status: ${response.status}`);
+            }
+    
+            // Handle the response data
+            const data = await response.json();
+            console.log(data); // Or handle data as needed
+            setIsFormVisible(false);
+    
+            // Optionally, you might want to reset the form or redirect the user
+        } catch (error) {
+            console.error('Failed to submit the schedule:', error);
+            // Handle the error (show user feedback, etc.)
+        }
         // Here, you can handle the form submission, e.g., send the data to a server.
         setIsFormVisible(false);
     };
