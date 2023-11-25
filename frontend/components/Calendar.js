@@ -1,6 +1,7 @@
 "use client"; 
 
 import React, { useState } from 'react';
+import Link from 'next/link';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import './calendarStyles.css';
@@ -45,11 +46,11 @@ function CalendarComponent() {
             fullName: formData.fullName,
             email: formData.email,
             major: formData.major,
-            date: selectedDate // Ensure this is in the correct format
+            date: selectedDate
         };
     
         try {
-            // Send a POST request to your server endpoint
+            // POST request to server endpoint
             const response = await fetch('http://localhost:5000/api/schedules', {
                 method: 'POST',
                 headers: {
@@ -64,20 +65,25 @@ function CalendarComponent() {
     
             // Handle the response data
             const data = await response.json();
-            console.log(data); // Or handle data as needed
-            setIsFormVisible(false);
+            console.log(data);
     
             // Optionally, you might want to reset the form or redirect the user
         } catch (error) {
             console.error('Failed to submit the schedule:', error);
             // Handle the error (show user feedback, etc.)
         }
-        // Here, you can handle the form submission, e.g., send the data to a server.
         setIsFormVisible(false);
     };
 
     return (
         <div className="calendar-container">
+
+        <div className="login-button-container">
+            <Link href="/login" passHref>
+                <button className="login-button">Login</button>
+            </Link>
+        </div>
+
         <Calendar 
             onClickDay={handleDateSelect} 
             tileDisabled={isWeekend}
