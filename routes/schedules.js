@@ -11,14 +11,12 @@ router.post('/', async (req, res) => {
     const newSchedule = new Schedule({ fullName, email, date, major });
 
     // Save the schedule to the database
-    await newSchedule.save();
+    const savedSchedule = await newSchedule.save();
 
-    res.status(201).json(newSchedule);
+    res.status(201).json(savedSchedule);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
 });
-
-// Add more routes as needed...
 
 module.exports = router;

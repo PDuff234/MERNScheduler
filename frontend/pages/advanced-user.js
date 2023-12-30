@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
+import './pages.css'; 
 
 const AdvancedUserPage = () => {
     const [availability, setAvailability] = useState({
@@ -19,16 +20,22 @@ const AdvancedUserPage = () => {
     };
 
     // Function to check if a date should be disabled
-    const isDateUnavailable = (date) => {
-        const day = date.getDay(); // 0 is Sunday, 1 is Monday, etc.
+    // Pass the date and current user view to only disable days displayed in the monthly view
+    const isDateUnavailable = ({date, view}) => {
+        if (view === 'month')
+        {
+            const day = date.getDay();
 
-        // Disable weekends
-        if (day === 0 || day === 6) {
-            return true;
+            // Disable weekends
+            if (day === 0 || day === 6) {
+                return true;
+            }
+            
+            const weekdayMapping = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+            return !availability[weekdayMapping[day]];
         }
-        
-        const weekdayMapping = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
-        return !availability[weekdayMapping[day]];
+        //Dont disable other components in other views
+        return false; 
     };
 
     const formatWeekdayName = (locale, date) => {
@@ -39,7 +46,7 @@ const AdvancedUserPage = () => {
     };
 
     const handleSubmitAvailability = async () => {
-        // Here you would send the availability data to the backend
+        // Send the availability data to the backend
         console.log('Submitting availability:', availability);
         // POST request to the backend with the availability
     };
@@ -60,11 +67,11 @@ const AdvancedUserPage = () => {
                 ))}
             </div>
             <Calendar
-                tileDisabled={({ date }) => isDateUnavailable(date)}
+                tileDisabled={({ date, view }) => isDateUnavailable({ date, view })}
                 formatShortWeekday={(locale, date) => formatWeekdayName(locale, date)}
                 locale='en-US'
             />
-            <button onClick={handleSubmitAvailability}>Submit Availability</button>
+            <button className="navigate-button" onClick={handleSubmitAvailability}>Submit Availability</button>
         </div>
     );
 };

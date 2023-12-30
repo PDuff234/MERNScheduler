@@ -51,6 +51,12 @@ const Login = () => {
                     <button className="navigate-button">Advanced User Page</button>
                 </Link>
             </div>
+
+            <div className="navigate-to-admin">
+                <Link href="/admin-user" passHref>
+                    <button className="navigate-button">Administrative User Page</button>
+                </Link>
+            </div>
         </div>
     );
 };

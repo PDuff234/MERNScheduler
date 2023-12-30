@@ -4,8 +4,8 @@ const router = express.Router();
 const bcrypt = require('bcryptjs');
 const User = require('../models/User');
 
-// POST api/users/register
-router.post('/register', async (req, res) => {
+// Route to create a new user
+router.post('/create', async (req, res) => {
   try {
     // Hash password
     const hashedPassword = await bcrypt.hash(req.body.password, 12);
@@ -20,9 +20,11 @@ router.post('/register', async (req, res) => {
 
     // Save the user
     const savedUser = await newUser.save();
-    res.status(201).json(savedUser);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
+
+    res.status(201).json({ message: 'User created successfully' });
+    } catch (error) {
+      console.error('An error occurred while creating user:', error);
+      res.status(500).json({ error: 'Failed to create user' });
   }
 });
 

@@ -169,3 +169,10 @@
 .navigate-button:hover {
     background-color: #0056b3;
 }
+
+.navigate-to-admin {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+}

@@ -66,3 +66,8 @@
     justify-content: center;
     height: 100vh;
   }
+
+.calendar-container h1,
+.calendar-container label {
+    color: white; 
+}
