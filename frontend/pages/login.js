@@ -4,14 +4,46 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import './login.css'; 
 
+//Authentication
+import { useRouter } from 'next/router';
+import bcrypt from 'bcrypt'; 
+import jwt from 'jsonwebtoken';
+
 const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
-    const handleLogin = (event) => {
+    const handleLogin = async (event) => {
         event.preventDefault();
-        // Implement login logic here
-        console.log('Login with:', email, password);
+    
+        const { username, password } = event.target;
+    
+        // Find the user in the database
+        const user = await User.findOne({ email: email.value });
+
+        // Check and handle if user exists
+        if (!user)
+        {
+            throw 'User not found'; 
+        }
+    
+        if (user && await bcrypt.compare(password.value, user.password)) {
+            // Passwords match
+            const token = jwt.sign({ username: user.username, role: user.role }, process.env.JWT_SECRET_KEY);
+    
+            // Save the JWT in local storage
+            localStorage.setItem('token', token);
+    
+            // Check user role and navigate to the corresponding page
+            if (user.role === 'admin') {
+                router.push('/admin-user');
+            } else if (user.role === 'advanced') {
+                router.push('/advanced-user');
+            }
+        } else {
+            // Passwords don't match or user doesn't exist
+            console.log('Invalid username or password');
+        }
     };
 
     return (
